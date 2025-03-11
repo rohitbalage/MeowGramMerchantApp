@@ -53,20 +53,20 @@ const MerchantSignup = () => {
       Alert.alert("Error", "Please fill all fields and select a profile picture.");
       return;
     }
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       // Upload profile picture to Firebase Storage
       const response = await fetch(profilePic);
       const blob = await response.blob();
       const imageRef = ref(storage, `profile_pictures/${user.uid}.jpg`);
       await uploadBytes(imageRef, blob);
-
+  
       // Get image URL
       const profilePicURL = await getDownloadURL(imageRef);
-
+  
       // Save user details in Firestore
       await setDoc(doc(db, "merchants", user.uid), {
         storeName,
@@ -75,10 +75,11 @@ const MerchantSignup = () => {
         profilePicURL,
         createdAt: new Date(),
       });
-
+  
       Alert.alert("Success", "Merchant account created!");
       navigation.navigate("MerchantDashboard");
     } catch (error: any) {
+      console.error("Error during signup: ", error);
       Alert.alert("Signup Error", error.message);
     }
   };
