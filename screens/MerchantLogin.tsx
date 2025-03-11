@@ -1,7 +1,7 @@
-// MerchantLogin.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getApp } from 'firebase/app';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,13 +19,15 @@ const MerchantLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = () => {
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        navigation.navigate('MerchantDashboard');
-      })
-      .catch((err) => setError(err.message));
+  const handleLogin = async () => {
+    try {
+      const app = getApp();
+      const auth = getAuth(app);
+      await signInWithEmailAndPassword(auth, email, password);
+      navigation.navigate('MerchantDashboard');
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
