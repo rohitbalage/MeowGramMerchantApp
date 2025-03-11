@@ -1,9 +1,10 @@
+// MerchantLogin.tsx
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { getApp } from 'firebase/app';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { signInWithEmailAndPassword } from 'firebase/auth';  // Import Firebase Authentication methods
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';  // Import the correct type
+import { auth } from '../firebase';  // Import the auth instance from firebase.ts
 
 type RootStackParamList = {
   MerchantLogin: undefined;
@@ -21,12 +22,11 @@ const MerchantLogin = () => {
 
   const handleLogin = async () => {
     try {
-      const app = getApp();
-      const auth = getAuth(app);
+      // Sign in using the imported auth instance
       await signInWithEmailAndPassword(auth, email, password);
-      navigation.navigate('MerchantDashboard');
+      navigation.navigate('MerchantDashboard');  // Navigate to dashboard after successful login
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message);  // Display error if login fails
     }
   };
 
